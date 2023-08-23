@@ -74,7 +74,7 @@
 						<username>Seeg</username>
 						<password>Seegan@123</password>
 						<environment>Sandbox</environment>
-						<region>us-east-1</region>
+						<region>us-east-2</region>
 						<workerType>MICRO</workerType>
 						<workers>1</workers>
 					</cloudHubDeployment>
