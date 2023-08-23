@@ -67,6 +67,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>3.5.4</version>
+				<extensions>true</extensions>
 				<configuration>
 					<cloudHubDeployment>
 						<uri>https://anypoint.mulesoft.com</uri>
@@ -74,6 +75,8 @@
 						<username>Seeg</username>
 						<password>Seegan@123</password>
 						<environment>Sandbox</environment>
+						<applicationName>error-handling</applicationName>
+						<businessGroupId>688b4518-5a1d-4dee-9a16-f8b73cd3107e</businessGroupId>
 						<region>us-east-2</region>
 						<workerType>MICRO</workerType>
 						<workers>1</workers>
