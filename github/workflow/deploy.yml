@@ -2,7 +2,7 @@ name: Build and Deploy to Sandbox
 
 on:
   push:
-    branches: [ develop, master]
+    branches: [ develop ]
   pull_request:
     branches: [ main ]
     
