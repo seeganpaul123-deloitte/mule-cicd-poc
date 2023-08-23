@@ -23,7 +23,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
-        java-version: 1.8
+        java-version: 8
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip=true
     - name: Stamp artifact file name with commit hash
@@ -65,5 +65,5 @@ jobs:
          -Danypoint.username="$USERNAME" \
          -Danypoint.password="$PASSWORD" \
          -Danypoint.platform.client_id=cc8c8482cf6e4b598b77f51254856444 \
-         -Danypoint.platform.client_secret=cc8c8482cf6e4b598b77f51254856444 \
+         -Danypoint.platform.client_secret=9e9AaC2eFB444707B5a0A3FBea880926 \
          -DbusinessGroup=688b4518-5a1d-4dee-9a16-f8b73cd3107e
