@@ -69,10 +69,14 @@
 				<version>3.5.4</version>
 				<configuration>
 					<cloudHubDeployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<muleVersion>4.4.0</muleVersion>
 						<username>Seeg</username>
 						<password>Seegan@123</password>
 						<environment>Sandbox</environment>
 						<region>us-east-1</region>
+						<workerType>MICRO</workerType>
+						<workers>1</workers>
 					</cloudHubDeployment>
 				</configuration>
 			</plugin>
