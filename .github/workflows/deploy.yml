@@ -63,7 +63,4 @@ jobs:
         mvn deploy -DmuleDeploy \
          -Dmule.artifact=$artifactName \
          -Danypoint.username=Seeg \
-         -Danypoint.password=Seegan@123 \
-         -Danypoint.platform.client_id=cc8c8482cf6e4b598b77f51254856444 \
-         -Danypoint.platform.client_secret=9e9AaC2eFB444707B5a0A3FBea880926 \
-         -DbusinessGroup=688b4518-5a1d-4dee-9a16-f8b73cd3107e
+         -Danypoint.password=Seegan@123
