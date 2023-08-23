@@ -80,6 +80,7 @@
 						<region>us-east-2</region>
 						<workerType>MICRO</workerType>
 						<workers>1</workers>
+						<objectStoreV2>true</objectStoreV2>
 					</cloudHubDeployment>
 				</configuration>
 			</plugin>
