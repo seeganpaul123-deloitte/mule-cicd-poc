@@ -1,10 +1,8 @@
 name: Build and Deploy to Sandbox
 
 on:
-  push:
-    branches: [ develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     
 jobs:
   build:
