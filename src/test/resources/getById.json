@@ -1,0 +1,11 @@
+[
+    {
+        "gender": "male",
+        "stream": "pcmc",
+        "student_id": 1,
+        "last_name": "Williams",
+        "course": "science",
+        "first_name": "Sam",
+        "email": "samwil@gmail.com"
+    }
+]

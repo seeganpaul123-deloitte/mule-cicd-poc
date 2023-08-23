@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="f8f9d617-aa40-4ed0-a741-d257e1f7d970" >
+		<vm:queues >
+			<vm:queue queueName="error" />
+		</vm:queues>
+	</vm:config>
+	<error-handler name="custom-error-handlerError_Handler" doc:id="fdddb9d3-8d9e-4682-ba3f-f4918da452c4" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="17d4ad42-63d1-44e1-bd80-f6895b704e68" type="APP: NOT_FOUND">
+			<set-variable value="404" doc:name="statusCode" doc:id="be39431f-cdc4-4ddb-bd9e-8434dcc65e53" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ed1889d2-e215-4b7f-9405-9063f8781850" type="APP: BAD_REQUEST">
+			<set-variable value="400" doc:name="status code" doc:id="d82393de-9635-41c7-8aa7-fa1da2b6943d" variableName="httpStatus"/>
+		</on-error-propagate>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f67c70b7-7c0a-4610-9fe4-a41ad6c196b0" type="APP:STREAM_INVALID">
+			<logger level="INFO" doc:name="Logger" doc:id="6ccca26a-2486-4602-81ab-f4b2a588f944" message="#[payload]"/>
+			<vm:publish doc:name="Publish to error queue" doc:id="aab8a8e8-c988-4474-baaa-4a9ce595f76f" config-ref="VM_Config" queueName="error"/>
+			<logger level="INFO" doc:name="" doc:id="df24ff16-0563-43e9-8448-3ae1cb2d093f" message="This payload is published to error queue"/>
+		</on-error-continue>
+	</error-handler>
+</mule>

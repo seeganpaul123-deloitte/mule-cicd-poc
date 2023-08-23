@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="interface-test-suite.xml" />
+	<munit:test name="interface-test-suite-get-studentSuccess" doc:id="00b83cf3-a411-4846-ab10-22038b0040bb" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="select" doc:id="1beb080f-040c-4b5f-b63a-eeeca48fefb5" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="33928d36-c8b5-4536-8bbd-c9eb13808a0c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getById.json')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="34c44a47-06b8-44f2-8555-84cf6a569c6f" >
+				<munit:attributes value='#[{uriParams:{"id": 1}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get-student" doc:id="7b8094a4-5207-4081-8b22-bbab6c7e9d2f" name="get-student"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="15c194f5-cb16-4305-b486-449652287ba6" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-test-suite-get-studentException" doc:id="48f7109b-dd82-4fc0-b3f5-762d28b50dbb" description="Test" expectedErrorType="APP: NOT_FOUND">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="select" doc:id="febf6fad-d10f-4300-8f26-90a5e6ba7d75" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="33928d36-c8b5-4536-8bbd-c9eb13808a0c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('getByIdException.json')]" mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2255aa9e-1971-435a-a264-bbbad51dac13">
+				<munit:attributes value='#[{uriParams:{"id": 1}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to get-student" doc:id="33e4f7e5-85c7-4437-87e1-a577ee3a3565" name="get-student"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="interface-test-suite-post-studentsInconsistentStream" doc:id="ee760861-c642-4fc5-806e-ad48fd6c7216" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="error queue" doc:id="798ddff6-d753-43ea-85ca-19a4699b28ac" processor="vm:publish">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="aab8a8e8-c988-4474-baaa-4a9ce595f76f" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="21c39ae2-66bb-41d5-94e4-9610e427bdf8" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://createStudent.json')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-students" doc:id="f857ddae-0763-492b-977d-1a2206ec8e11" name="post-students"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="107919cf-88d6-4c17-862a-0ff764294911" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="interface-test-suite-post-studentsBadRequest" doc:id="0a27ddc2-3743-4ec9-a0f0-277b73c72df0" description="Test" expectedErrorType="APP: BAD_REQUEST" >
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="c8c2c11a-ab33-4177-bfc9-c745423529fb" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://createStudent3.json')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-students" doc:id="a322be2d-fb18-46e1-b016-cca4f9c3c6c9" name="post-students" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="interface-test-suite-post-studentsSuccess" doc:id="6f783594-0c2f-4765-8d0a-32a6ebbc3fc1" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="insert" doc:id="f6a41a41-2db1-492d-9339-44fb6c52e1aa" processor="db:insert" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1bebbacd-5f0c-42d9-8e8f-dab200092624" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="afe40ec4-a35d-4f61-a718-2305b71664c2" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://createStudent2.json')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post-students" doc:id="d05eea26-1021-46e4-bad8-09895fdf3857" name="post-students" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e4cb1698-f53f-4446-a235-ad2f2db4bf97" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

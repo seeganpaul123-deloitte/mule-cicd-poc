@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener" doc:name="HTTP Listener config" doc:id="d17f27bf-c023-4620-8d66-2edf2a151b7f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<configuration doc:name="Configuration" doc:id="7a9e113c-6577-47ab-b2bd-ecfc2efbae01" defaultErrorHandler-ref="custom-error-handlerError_Handler" />
+	<flow name="get-student" doc:id="6742732d-6673-40c3-a2d9-1a5f8fc5d499" >
+		<http:listener doc:name="Listener" doc:id="135e10ce-7fbb-431f-a585-ee3eff25b99d" config-ref="HTTP_Listener" path="/students/{id}" allowedMethods="GET">
+			<http:error-response statusCode="#[vars.httpStatus default 500]" />
+		</http:listener>
+		<set-variable value="#[attributes.uriParams.id as Number]" doc:name="Set Variable" doc:id="239328d4-e903-4edf-8d0f-0f69b80361e9" variableName="student_id"/>
+		<flow-ref doc:name="Flow Reference" doc:id="094a8434-3591-4e11-9586-1201b946b648" name="getById"/>
+		<ee:transform doc:name="Response" doc:id="0c7bff96-4619-4def-a387-1a0cec4aab1c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="post-students" doc:id="21e3d7bb-b004-47a3-a6cd-fec141a6d051" >
+		<http:listener doc:name="Listener" doc:id="7e4ca9ad-143b-4fc1-8abd-af95669f7154" config-ref="HTTP_Listener" path="/students" allowedMethods="POST">
+			<http:response statusCode="202" />
+			<http:error-response statusCode="#[vars.httpStatus default 500]" />
+		</http:listener>
+		<logger level="INFO" doc:name="Request body" doc:id="e7262621-9e8f-49af-89c7-280e8ae6fadf" message="#[payload]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="242101c7-1837-4aef-8da1-4cfe913097e4" name="createStudent"/>
+		<ee:transform doc:name="Transform Message" doc:id="81030056-4e7c-4d98-b3ac-db5063931681" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "The data is accepted for processing"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

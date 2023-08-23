@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="02ff5043-e873-4da5-83b5-1e6228395246" >
+		<db:generic-connection url="jdbc:postgresql://drona.db.elephantsql.com:5432/thyafbqb" driverClassName="org.postgresql.Driver" user="thyafbqb" password="NPqpKJgkWFhuF7wGyUZM3QDmmrG_jLoB" />
+	</db:config>
+	<flow name="getById" doc:id="b1e3d831-b5a2-4113-9b99-c885e6b0ab83" >
+		<logger level="INFO" doc:name="Logger" doc:id="b5a719cd-77b0-4db2-85ed-98a27ab064a4" message='#["Fetching data of student_id " ++ vars.student_id ++" from database" as String]'/>
+		<db:select doc:name="Select" doc:id="33928d36-c8b5-4536-8bbd-c9eb13808a0c" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from student where student_id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id": vars.student_id
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="e951785e-3c5a-43d1-98a4-67e6f7d8e266" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="2bd87887-718e-4761-bbae-f4ed53a3212c" >
+			<when expression="#[sizeOf(payload) == 0]">
+				<raise-error doc:name="Raise error" doc:id="8fdd5430-0479-4434-a67e-428202ef6ff1" type="APP: NOT_FOUND" description='#["the student record with id " ++ vars.student_id ++ " is not found"]'/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="3dfe0849-70d9-40c8-9bf2-9762b913f893" message="#[payload]"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="createStudent" doc:id="60bc2411-be17-4848-827f-2ca09ec20f1f" >
+		<choice doc:name="Choice" doc:id="41568900-5e1b-4c30-bc30-9ae00f6491cf" >
+			<when expression="#[payload.first_name == null or payload.gender == null or payload.course == null or payload.stream == null or payload.last_name == null or payload.email == null]">
+				<raise-error doc:name="Raise error" doc:id="20bbc910-5c4b-4667-9306-f4fd3aa5aeb9" type="APP: BAD_REQUEST" description="The required fields are missing"/>
+			</when>
+			<otherwise >
+				<validation:is-true doc:name="Is true" doc:id="17b1273c-90ca-4156-80ef-19c2165ab764" expression='#[(payload.course == "science" and (payload.stream == "pcmc" or payload.stream == "pcmb") or payload.course == "commerce" and (payload.stream == "msba" or payload.stream == "ceba"))]'>
+					<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:STREAM_INVALID" />
+				</validation:is-true>
+				<db:insert doc:name="Insert" doc:id="1bebbacd-5f0c-42d9-8e8f-dab200092624" config-ref="Database_Config">
+					<db:sql ><![CDATA[insert into student (first_name, last_name, gender, email, course, stream) values(:firstName, :lastName, :gender, :email, :course, :stream)]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	"firstName": payload.first_name,
+	"lastName": payload.last_name,
+	"gender": payload.gender,
+	"email": payload.email,
+	"course": payload.course,
+	"stream": payload.stream
+}]]]></db:input-parameters>
+				</db:insert>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
