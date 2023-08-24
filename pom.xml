@@ -75,18 +75,18 @@
 						<username>Seeg</username>
 						<password>Seegan@123</password>
 						<environment>Sandbox</environment>
-						<applicationName>error-handling</applicationName>
-						<businessGroupId>688b4518-5a1d-4dee-9a16-f8b73cd3107e</businessGroupId>
-						<region>us-east-2</region>
+						<applicationName>error-handling-seeg</applicationName>
+						<businessGroup>Personal</businessGroup>
+						<!-- <region>us-east-2</region> -->
 						<workerType>MICRO</workerType>
 						<workers>1</workers>
-						<properties>
+						<!-- <properties>
 							<maven.compiler.target>1.8</maven.compiler.target>
 							<maven.compiler.source>1.8</maven.compiler.source>
 							<anypoint.platform.client_id>cc8c8482cf6e4b598b77f51254856444</anypoint.platform.client_id>
 							<anypoint.platform.client_secret>9e9AaC2eFB444707B5a0A3FBea880926</anypoint.platform.client_secret>
 						
-						</properties>
+						</properties> -->
 						<objectStoreV2>true</objectStoreV2>
 					</cloudHubDeployment>
 				</configuration>
