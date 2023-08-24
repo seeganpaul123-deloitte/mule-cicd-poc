@@ -63,4 +63,5 @@ jobs:
         mvn deploy -DmuleDeploy \
          -Dmule.artifact=$artifactName \
          -Danypoint.username="$USERNAME" \
-         -Danypoint.password="$PASSWORD" 
+         -Danypoint.password="$PASSWORD" \
+         -Danypoint.environment=${{secrets.anypoint_environment}} -Danypoint.businessGroup=${{secrets.anypoint_businessgroup}} -Danypoint.workerType=${{secrets.anypoint_workertype}} -Danypoint.workers=${{secrets.anypoint_workers}}

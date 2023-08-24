@@ -72,14 +72,14 @@
 					<cloudHubDeployment>
 						<uri>https://anypoint.mulesoft.com</uri>
 						<muleVersion>4.4.0</muleVersion>
-						<username>Seeg</username>
-						<password>Seegan@123</password>
-						<environment>Sandbox</environment>
+						<username>${anypoint.username}</username>
+						<password>${anypoint.password}</password>
+						<environment>${anypoint.environment}</environment>
 						<applicationName>error-handling-seeg</applicationName>
-						<businessGroup>Personal</businessGroup>
+						<businessGroup>${anypoint.businessGroup}</businessGroup>
 						<!-- <region>us-east-2</region> -->
-						<workerType>MICRO</workerType>
-						<workers>1</workers>
+						<workerType>${anypoint.workerType}</workerType>
+						<workers>${anypoint.workers}</workers>
 						<!-- <properties>
 							<maven.compiler.target>1.8</maven.compiler.target>
 							<maven.compiler.source>1.8</maven.compiler.source>
